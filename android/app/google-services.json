@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1046303599995",
+    "firebase_url": "https://reda-812d0-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "reda-812d0",
+    "storage_bucket": "reda-812d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046303599995:android:f659b43c0371d7d53aa1de",
+        "android_client_info": {
+          "package_name": "com.example.smartwait"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046303599995-qcj92biej83h7pgi7hhi9of54ardc1d5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb0qC1fmS3NEPrqLfA_PFFIaL2KTeJqsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046303599995-qcj92biej83h7pgi7hhi9of54ardc1d5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
