@@ -6,12 +6,8 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:smartwait/splash_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'login_screen.dart';
-import 'package:http/http.dart' as http;
-import 'package:firebase_database/firebase_database.dart';
 
-import 'model/Camera.dart';
-import 'model/Place.dart';
+import 'login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,13 +41,17 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   final auth = FirebaseAuth.instance;
-  final ref = FirebaseDatabase.instance.ref('places');
+  final ref = FirebaseDatabase.instance.ref();
   final searchController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref.limitToLast(1).onValue;
+    ref.onValue.listen((event) {
+      // Print the key and value of the added item
+      print('${event.snapshot.key}: ${event.snapshot.value}');
+    });
   }
 
   @override
@@ -115,9 +115,10 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Expanded(
                 child: FirebaseAnimatedList(
-              query: ref,
+              query: ref.child('places'),
               defaultChild: Text('Loading'),
-              itemBuilder: (context, snapshot, animation, index) {
+              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                  Animation<double> animation, int index) {
                 final place = snapshot.child('place_name').value.toString();
                 if (searchController.text.isEmpty) {
                   return ListTile(
@@ -129,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     subtitle: Text(
-                      snapshot.child('adresse').value.toString(),
+                      snapshot.child('adress').value.toString(),
                       style: const TextStyle(
                         color: Color.fromARGB(153, 46, 46, 46),
                       ),
@@ -152,7 +153,7 @@ class _SearchPageState extends State<SearchPage> {
                         onPressed: () async {
                           // Get the destination address from the text field
                           String destination =
-                              snapshot.child('adresse').value.toString();
+                              snapshot.child('adress').value.toString();
                           print(destination);
                           // Launch the URL
                           Future<void> _launch(Uri url) async {
@@ -175,7 +176,11 @@ class _SearchPageState extends State<SearchPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Login(),
+                              builder: (context) => Login(
+                                  place_name: snapshot
+                                      .child('place_name')
+                                      .value
+                                      .toString()),
                             ),
                           );
                         },
@@ -194,7 +199,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     subtitle: Text(
-                      snapshot.child('adresse').value.toString(),
+                      snapshot.child('adress').value.toString(),
                       style: const TextStyle(
                         color: Color.fromARGB(153, 46, 46, 46),
                       ),
@@ -217,7 +222,7 @@ class _SearchPageState extends State<SearchPage> {
                         onPressed: () async {
                           // Get the destination address from the text field
                           String destination =
-                              snapshot.child('adresse').value.toString();
+                              snapshot.child('adress').value.toString();
                           // Launch the URL
                           Future<void> _launch(Uri url) async {
                             await canLaunchUrl(url)
@@ -239,7 +244,11 @@ class _SearchPageState extends State<SearchPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Login(),
+                              builder: (context) => Login(
+                                  place_name: snapshot
+                                      .child('place_name')
+                                      .value
+                                      .toString()),
                             ),
                           );
                         },

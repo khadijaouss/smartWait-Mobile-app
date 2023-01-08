@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:smartwait/book_online.dart';
 import 'NotFound.dart';
-import 'main.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  final String place_name;
+  const Login({Key? key, required this.place_name}) : super(key: key);
   @override
   _LoginState createState() => _LoginState();
 }
@@ -19,8 +18,10 @@ class _LoginState extends State<Login> {
     return firebaseApp;
   }
 
+  String uid = "";
+
   //login function
-  static Future<User?> loginWithEmailAndPassword(
+  Future<User?> loginWithEmailAndPassword(
       {required String email,
       required String password,
       required BuildContext context}) async {
@@ -30,11 +31,20 @@ class _LoginState extends State<Login> {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       user = userCredential.user;
+      String uid = user!.uid;
+      // Passage de l'UID à la prochaine page
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                BookOnline(uid: uid, place_name: widget.place_name),
+          ));
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
         print("No user found");
       }
     }
+
     return user;
   }
 
@@ -114,10 +124,12 @@ class _LoginState extends State<Login> {
                     email: _emailController.text,
                     password: _passwordController.text,
                     context: context);
-                print(user);
+                String uid = user!.uid;
+                print(uid);
                 if (user != null) {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => BookOnline()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) =>
+                          BookOnline(uid: uid, place_name: widget.place_name)));
                 } else {
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => NotFound()));
